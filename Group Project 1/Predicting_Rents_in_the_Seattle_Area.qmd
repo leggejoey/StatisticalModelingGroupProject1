@@ -1,0 +1,36 @@
+---
+title: "Predicting Rents in the Seattle Area"
+author: "Joey Legge, Ethan Kho, Issiah Long, Kushal KC"
+date: today
+embed-resources: true
+editor: source
+format:
+  html:
+    toc: true
+    code-tools: true
+---
+
+```{r}
+#| label: load-packages
+#| message: false
+
+# Add packages as needed using library()
+library(leaps)
+library(HH)
+```
+
+## Exercise 1
+
+
+
+```{r}
+# Insert code for Exercise 1 here
+```
+
+## Exercise 2
+
+
+
+```{r}
+# Insert code for Exercise 1 here
+```
