@@ -17,20 +17,62 @@ format:
 # Add packages as needed using library()
 library(leaps)
 library(HH)
+rents <- read.csv("rents.csv")
 ```
 
-## Exercise 1
+## (Temporary Section) Exploring models for predicting the monthly rent of a property.
 
+So far the two models I have here have major issues with the conditions for multi-regressional models.
 
+### Model 1
 
 ```{r}
-# Insert code for Exercise 1 here
+rents$King <- as.numeric(rents$county == "King")
+rents$Snohomish <- as.numeric(rents$county == "Snohomish")
+rents$Kitsap <- as.numeric(rents$county == "Kitsap")
+rents$Pierce <- as.numeric(rents$county == "Pierce")
+
+rents$house <- as.numeric(rents$type == "house")
+rents$apartment <- as.numeric(rents$type == "apartment")
+rents$townhome <- as.numeric(rents$type == "townhome")
+
+# I had to remove county and type since they are categorical and I just created numeric binary values for them
+m.all <- lm(rent ~ . - county - type, data = rents)
+
+summary(m.all)
+
+MSE = (summary(m.all)$sigma)^2
+step(m.all, scale = MSE, direction = "both")
+cat("\n\nThe new Model: \n")
+
+# I removed smoking_allowed from the model that was provided from the step function because it isn't significant with the other variable also in the model
+Model <- lm(formula = rent ~ sqfeet + beds + baths + cats_allowed + dogs_allowed + electric_vehicle_charge + furnished + wd_in_unit + garage + in_seattle + in_bellevue + seattle_dist + King + 
+    Snohomish + Kitsap + apartment, data = rents)
+
+summary(Model)
+
+plot(Model)
+hist(resid(Model), n = 60)
 ```
 
-## Exercise 2
-
-
+### Model 2
 
 ```{r}
-# Insert code for Exercise 1 here
+all <- regsubsets(rent ~ . - county - type, data = rents)
+# the models are the same for both r^2 and Cp from this selection so I only showed the one plot
+plot(all, scale="adjr2")
+#plot(all, scale="Cp")
+
+Model2 <- lm(rent ~ sqfeet + baths + electric_vehicle_charge + 
+    furnished + wd_in_unit + in_seattle + in_bellevue + seattle_dist + Pierce, data = rents)
+
+plot(Model2)
+hist(resid(Model2), n = 60)
+
+summary(Model2)
 ```
+
+
+
+
+
